@@ -1,0 +1,114 @@
+<Window x:Class="XComDownloader.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="X.COM Downloader" Icon="/app.ico" Height="680" Width="900" MinHeight="420" MinWidth="640"
+        Loaded="Window_Loaded" Closing="Window_Closing">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="2*" />
+        </Grid.RowDefinitions>
+
+        <!-- Nastavení -->
+        <GroupBox Header="Nastavení" Grid.Row="0" Padding="6">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="gallery-dl:" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <TextBox x:Name="GalleryDlBox" Grid.Column="1"
+                         Text="{Binding GalleryDlPath, UpdateSourceTrigger=PropertyChanged}" />
+                <Button Grid.Column="2" Content="Vybrat…" Click="BrowseGalleryDl_Click" />
+
+                <TextBlock Grid.Row="1" Text="Cílová složka:" VerticalAlignment="Center" Margin="0,6,8,0" />
+                <TextBox x:Name="TargetBox" Grid.Row="1" Grid.Column="1" Margin="0,6,0,0"
+                         Text="{Binding TargetFolder, UpdateSourceTrigger=PropertyChanged}" />
+                <Button Grid.Row="1" Grid.Column="2" Content="Vybrat…" Margin="4,6,0,0" Click="BrowseTarget_Click" />
+
+                <TextBlock Grid.Row="2" Text="Přihlášení (cookies):" VerticalAlignment="Center" Margin="0,6,8,0" />
+                <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,6,0,0">
+                    <ComboBox x:Name="CookieSourceCombo" Width="180"
+                              DisplayMemberPath="Value" SelectedValuePath="Key"
+                              SelectedValue="{Binding CookieSource}"
+                              SelectionChanged="CookieSourceCombo_SelectionChanged" />
+                    <StackPanel x:Name="AppLoginPanel" Orientation="Horizontal">
+                        <Button x:Name="LoginButton" Content="Přihlásit k X…" Click="Login_Click" />
+                        <Button x:Name="LogoutButton" Content="Odhlásit" Click="Logout_Click" />
+                        <TextBlock x:Name="LoginStatusText" VerticalAlignment="Center" Margin="10,0,0,0" Text="…" />
+                    </StackPanel>
+                </StackPanel>
+
+                <TextBlock Grid.Row="3" Text="Soubor cookies.txt:" VerticalAlignment="Center" Margin="0,6,8,0" />
+                <TextBox x:Name="CookiesBox" Grid.Row="3" Grid.Column="1" Margin="0,6,0,0"
+                         Text="{Binding CookiesFile, UpdateSourceTrigger=PropertyChanged}" />
+                <Button x:Name="BrowseCookiesButton" Grid.Row="3" Grid.Column="2" Content="Vybrat…" Margin="4,6,0,0"
+                        Click="BrowseCookies_Click" />
+
+                <TextBlock Grid.Row="4" Text="Prohlížeč:" VerticalAlignment="Center" Margin="0,6,8,0" />
+                <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="0,6,0,0">
+                    <ComboBox x:Name="BrowserCombo" Width="140" SelectedItem="{Binding Browser}" />
+                    <CheckBox Content="Stahovat jen nové soubory (archiv stažených)" Margin="16,0,0,0"
+                              VerticalAlignment="Center" IsChecked="{Binding UseArchive}" />
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+
+        <!-- Přidání do fronty -->
+        <Grid Grid.Row="1" Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="URL nebo @účet:" VerticalAlignment="Center" Margin="0,0,8,0" />
+            <TextBox x:Name="UrlBox" Grid.Column="1" KeyDown="UrlBox_KeyDown" />
+            <Button Grid.Column="2" Content="Přidat do fronty" Click="Add_Click" />
+            <Button Grid.Column="3" Content="Moje záložky" Click="AddBookmarks_Click"
+                    ToolTip="Přidá do fronty https://x.com/i/bookmarks (vyžaduje cookies přihlášeného účtu)" />
+        </Grid>
+
+        <!-- Ovládání fronty -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,10,0,6">
+            <Button x:Name="StartButton" Content="▶ Spustit" Margin="0" Click="Start_Click" />
+            <Button x:Name="StopButton" Content="■ Zastavit" IsEnabled="False" Click="Stop_Click" />
+            <Button Content="Odebrat vybrané" Click="RemoveSelected_Click" />
+            <Button Content="Vyčistit dokončené" Click="ClearFinished_Click" />
+            <Button Content="Otevřít cílovou složku" Click="OpenTarget_Click" />
+        </StackPanel>
+
+        <!-- Fronta -->
+        <ListView x:Name="QueueList" Grid.Row="3" SelectionMode="Extended">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="URL" Width="330" DisplayMemberBinding="{Binding Url}" />
+                    <GridViewColumn Header="Stav" Width="90" DisplayMemberBinding="{Binding StatusText}" />
+                    <GridViewColumn Header="Staženo" Width="65" DisplayMemberBinding="{Binding Downloaded}" />
+                    <GridViewColumn Header="Přeskočeno" Width="80" DisplayMemberBinding="{Binding Skipped}" />
+                    <GridViewColumn Header="Poslední soubor" Width="270" DisplayMemberBinding="{Binding LastFile}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <ProgressBar x:Name="Progress" Grid.Row="4" Height="6" Margin="0,6" />
+
+        <!-- Log -->
+        <TextBox x:Name="LogBox" Grid.Row="5" IsReadOnly="True" TextWrapping="NoWrap"
+                 VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                 VerticalContentAlignment="Top" FontFamily="Consolas" FontSize="12" />
+    </Grid>
+</Window>

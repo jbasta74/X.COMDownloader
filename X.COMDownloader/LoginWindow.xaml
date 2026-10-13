@@ -1,0 +1,18 @@
+<Window x:Class="XComDownloader.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        Title="Přihlášení k X" Icon="/app.ico" Height="760" Width="560"
+        WindowStartupLocation="CenterOwner"
+        Loaded="Window_Loaded" Closed="Window_Closed">
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Padding="10,6" Background="#F3F3F3" BorderBrush="#DDD" BorderThickness="0,0,0,1">
+            <DockPanel>
+                <Button x:Name="DoneButton" DockPanel.Dock="Right" Content="Hotovo" Click="Done_Click" />
+                <TextBlock x:Name="StatusText" VerticalAlignment="Center" TextWrapping="Wrap"
+                           Text="Přihlaste se ke svému účtu X. Po přihlášení okno zavřete tlačítkem Hotovo." />
+            </DockPanel>
+        </Border>
+        <wv2:WebView2 x:Name="Browser" />
+    </DockPanel>
+</Window>
