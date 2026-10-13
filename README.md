@@ -13,6 +13,10 @@ o samotné stahování se stará gallery-dl, aplikace přidává frontu, přihl�
 - **Rychlé zadávání**: stačí napsat `@ucet` nebo `ucet` a aplikace z toho udělá `https://x.com/ucet/media`. Víc položek oddělte mezerou, čárkou nebo středníkem.
 - **Další zdroje cookies**: vlastní soubor `cookies.txt`, čtení z prohlížeče přes gallery-dl, nebo stahování bez přihlášení.
 
+## Stažení
+
+Hotový `XComDownloader.exe` najdete v sekci [Releases](https://github.com/jbasta74/X.COMDownloader/releases/latest). Stačí ho stáhnout a spustit, instalace není potřeba.
+
 ## Požadavky
 
 - Windows 10/11 (x64)
@@ -37,7 +41,7 @@ Stažené soubory se ukládají do cílové složky v podsložkách podle galler
 Projekt je pro Visual Studio 2026 (`X.COMDownloader.slnx`), WPF, .NET 10.
 
 ```powershell
-git clone https://github.com/<uzivatel>/X.COMDownloader.git
+git clone https://github.com/jbasta74/X.COMDownloader.git
 cd X.COMDownloader
 dotnet build
 ```
@@ -86,3 +90,7 @@ X.COMDownloader/
 - Přihlášení (cookies) dává plný přístup k vašemu účtu X. Nesdílejte složku `%AppData%\XComDownloader` ani soubory cookies a nikdy je necommitujte do repozitáře.
 - Stahujte jen obsah, ke kterému máte oprávnění, a respektujte podmínky služby X a autorská práva.
 - Projekt není nijak spojen se společností X Corp. ani s autory gallery-dl.
+
+## Licence
+
+Projekt je šířen pod licencí MIT, viz [LICENSE.txt](LICENSE.txt).
